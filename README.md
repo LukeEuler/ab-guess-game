@@ -1,5 +1,7 @@
 # ab-guess-game
 
+[![Build Status](https://travis-ci.org/LukeEuler/ab-guess-game.svg?branch=master)](https://travis-ci.org/LukeEuler/ab-guess-game)
+
 # example
 
 ```
