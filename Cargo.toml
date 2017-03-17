@@ -1,0 +1,7 @@
+[package]
+name = "ab-guess-game"
+version = "0.1.0"
+authors = ["LukeEuler <513973890@qq.com>"]
+
+[dependencies]
+rand="0.3.0"
