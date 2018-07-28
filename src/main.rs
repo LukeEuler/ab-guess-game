@@ -3,7 +3,7 @@ extern crate rand;
 use std::io;
 use rand::Rng;
 
-fn creat_secreat_number() -> [u32; 4] {
+fn create_secret_number() -> [u32; 4] {
     let mut secret_number: [u32; 4] = [0, 0, 0, 0];
     secret_number[0] = rand::thread_rng().gen_range(1, 10);
     loop {
@@ -37,7 +37,7 @@ fn creat_secreat_number() -> [u32; 4] {
     secret_number
 }
 
-fn vaild_check(guess: u32) -> bool {
+fn valid_check(guess: u32) -> bool {
     let d = guess % 10;
     let c = (guess / 10) % 10;
     let b = (guess / 100) % 10;
@@ -75,8 +75,8 @@ fn main() {
     println!("规则：猜一个四位数，各位数值不等");
     println!("提示：数值且位置正确记作A，数值正确位置不对记作B");
     println!("请用最少的步数猜对");
-    println!("");
-    let secret_number = creat_secreat_number();
+    println!();
+    let secret_number = create_secret_number();
     let mut step = 0;
 
     loop {
@@ -102,7 +102,7 @@ fn main() {
             Err(_) => continue,
         };
 
-        if !vaild_check(guess) {
+        if !valid_check(guess) {
             continue;
         }
 
