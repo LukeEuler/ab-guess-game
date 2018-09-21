@@ -51,7 +51,7 @@ fn valid_check(guess: u32) -> bool {
     true
 }
 
-fn ab_check(guess: u32, secret_number: [u32; 4]) -> [u32; 2] {
+fn ab_check(guess: u32, secret_number: [u32; 4]) -> (u32, u32) {
     let guess_number: [u32; 4] = [guess / 1000, (guess / 100) % 10, (guess / 10) % 10, guess % 10];
     let (mut a, mut b) = (0, 0);
     for i in 0..4 {
@@ -61,13 +61,12 @@ fn ab_check(guess: u32, secret_number: [u32; 4]) -> [u32; 2] {
 
         for j in 0..4 {
             if secret_number[i] == guess_number[j] {
-
                 b += 1;
             }
         }
     }
     b -= a;
-    [a, b]
+    (a, b)
 }
 
 fn main() {
@@ -107,13 +106,13 @@ fn main() {
         }
 
         step += 1;
-        let ab = ab_check(guess, secret_number);
+        let (a, b) = ab_check(guess, secret_number);
         println!("Step: {}. You guessed: {}. {}A{}B",
                  step,
                  guess,
-                 ab[0],
-                 ab[1]);
-        if ab[0] == 4 {
+                 a,
+                 b);
+        if a == 4 {
             break;
         }
     }
