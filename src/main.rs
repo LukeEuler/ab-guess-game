@@ -70,11 +70,8 @@ fn ab_check(guess: u32, secret_number: [u32; 4]) -> (u32, u32) {
 }
 
 fn main() {
-    println!("AB猜数游戏");
-    println!("规则：猜一个四位数，各位数值不等");
-    println!("提示：数值且位置正确记作A，数值正确位置不对记作B");
-    println!("请用最少的步数猜对");
-    println!();
+    let rules = include_str!("../source/rules.txt");
+    println!("{}", rules);
     let secret_number = create_secret_number();
     let mut step = 0;
 
