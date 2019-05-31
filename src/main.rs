@@ -1,36 +1,19 @@
 extern crate rand;
 
-use std::io;
 use rand::Rng;
+use std::io;
 
 fn create_secret_number() -> [u32; 4] {
     let mut secret_number: [u32; 4] = [0, 0, 0, 0];
     secret_number[0] = rand::thread_rng().gen_range(1, 10);
-    loop {
-        secret_number[1] = rand::thread_rng().gen_range(0, 10);
-        if secret_number[1] != secret_number[0] {
-            break;
-        }
-    }
-    loop {
-        secret_number[2] = rand::thread_rng().gen_range(0, 10);
-        if secret_number[2] == secret_number[0] {
-            continue;
-        } else if secret_number[2] == secret_number[1] {
-            continue;
-        } else {
-            break;
-        }
-    }
-    loop {
-        secret_number[3] = rand::thread_rng().gen_range(0, 10);
-        if secret_number[3] == secret_number[0] {
-            continue;
-        } else if secret_number[3] == secret_number[1] {
-            continue;
-        } else if secret_number[3] == secret_number[2] {
-            continue;
-        } else {
+    for index in 1..4 {
+        'outer: loop {
+            secret_number[index] = rand::thread_rng().gen_range(0, 10);
+            for i in 0..index {
+                if secret_number[i] == secret_number[index] {
+                    continue 'outer;
+                }
+            }
             break;
         }
     }
@@ -52,7 +35,12 @@ fn valid_check(guess: u32) -> bool {
 }
 
 fn ab_check(guess: u32, secret_number: [u32; 4]) -> (u32, u32) {
-    let guess_number: [u32; 4] = [guess / 1000, (guess / 100) % 10, (guess / 10) % 10, guess % 10];
+    let guess_number: [u32; 4] = [
+        guess / 1000,
+        (guess / 100) % 10,
+        (guess / 10) % 10,
+        guess % 10,
+    ];
     let (mut a, mut b) = (0, 0);
     for i in 0..4 {
         if secret_number[i] == guess_number[i] {
@@ -104,11 +92,7 @@ fn main() {
 
         step += 1;
         let (a, b) = ab_check(guess, secret_number);
-        println!("Step: {}. You guessed: {}. {}A{}B",
-                 step,
-                 guess,
-                 a,
-                 b);
+        println!("Step: {}. You guessed: {}. {}A{}B", step, guess, a, b);
         if a == 4 {
             break;
         }
