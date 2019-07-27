@@ -1,5 +1,5 @@
 [package]
-name = "ab-guess-game"
+name = "ab_guess_game"
 version = "0.1.0"
 authors = ["LukeEuler <luke16times@gmail.com>"]
 
