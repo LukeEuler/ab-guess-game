@@ -26,11 +26,11 @@ pub struct Number {
 }
 
 impl Number {
-    pub fn new(content: &str) -> Result<Number, Box<Error>> {
+    pub fn new(content: &str) -> Result<Number, Box<dyn Error>> {
         let num: u32 = match content.trim().parse() {
             Ok(num) => num,
             Err(_) => {
-                let err: Box<Error + Send + Sync> =
+                let err: Box<dyn Error + Send + Sync> =
                     From::from(format!("can not parse {} as u32", content.trim()));
                 return Err(err);
             }
@@ -38,9 +38,9 @@ impl Number {
         Number::new_with_number(num)
     }
 
-    fn new_with_number(num: u32) -> Result<Number, Box<Error>> {
+    fn new_with_number(num: u32) -> Result<Number, Box<dyn Error>> {
         if !valid_check(num) {
-            let err: Box<Error + Send + Sync> = From::from(format!("invalid number {}", num));
+            let err: Box<dyn Error + Send + Sync> = From::from(format!("invalid number {}", num));
             return Err(err);
         }
         Ok(Number { value: num })
@@ -115,7 +115,5 @@ impl Numbers {
         result
     }
 
-    pub fn guess(&mut self, num: Number, (a, b): (u32, u32)) {
-        
-    }
+    pub fn guess(&mut self, _num: Number, (_a, _b): (u32, u32)) {}
 }
