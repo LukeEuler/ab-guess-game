@@ -50,6 +50,8 @@ widget_ids! {
         button,
         text_show,
         text_input,
+        button1,
+        button2,
     }
 }
 
@@ -74,6 +76,7 @@ struct DemoApp {
 
     secret_number: [u32; 4],
     step: i32,
+    complete: bool,
 }
 
 #[derive(Copy, Clone, Debug)]
@@ -82,6 +85,8 @@ struct Fonts {
 
     space_mono_regular_id: conrod_core::text::font::Id,
     space_mono_bold_id: conrod_core::text::font::Id,
+
+    fira_code_regular_id: conrod_core::text::font::Id,
 }
 
 impl DemoApp {
@@ -95,6 +100,7 @@ impl DemoApp {
             text_result: "".to_string(),
             secret_number: create_secret_number(),
             step: 0,
+            complete: false,
         }
     }
 }
@@ -205,10 +211,15 @@ fn gui_mode(width: u32, height: u32) {
         .fonts
         .insert_from_file(assets.join("fonts/space-mono/SpaceMono-Bold.ttf"))
         .unwrap();
+    let fira_code_regular_id = ui
+        .fonts
+        .insert_from_file(assets.join("fonts/FiraCode_2/FiraCode-Regular.ttf"))
+        .unwrap();
     let fonts = Fonts {
         yh_id: yh_id,
         space_mono_regular_id: space_mono_regular_id,
         space_mono_bold_id: space_mono_bold_id,
+        fira_code_regular_id: fira_code_regular_id,
     };
 
     // A type used for converting `conrod_core::render::Primitives` into `Command`s that can be used
@@ -348,47 +359,69 @@ fn set_game_widgets(ui: &mut conrod_core::UiCell, app: &mut DemoApp, ids: &mut I
         .auto_hide(true)
         .set(ids.canvas_x_scrollbar, ui);
 
-    // A text box in which we can mutate a single line of text, and trigger reactions via the
-    // `Enter`/`Return` key.
-    let text = &mut app.text_input;
     let result = &mut app.text_result;
-    for event in widget::TextBox::new(text)
-        .font_id(fonts.space_mono_regular_id)
-        .font_size(36)
-        .w_h(130.0, 40.0)
-        .top_left_of(ids.canvas)
-        .border(app.border_width)
-        .border_color(app.bg_color.invert().plain_contrast())
-        .color(app.bg_color.invert())
-        .set(ids.text_input, ui)
-    {
-        match event {
-            widget::text_box::Event::Enter => {
-                if (*text).trim() == "answer" {
-                    let answer: String = app.secret_number.iter().map(|i| i.to_string()).collect();
-                    *result = (*result).to_string() + "\n" + answer.as_str();
-                } else {
-                    match Number::new((*text).as_str()) {
-                        Ok(num) => {
-                            app.step += 1;
-                            let (a, b) = num.ab_check(app.secret_number);
-                            let ll = format!("{}. {}. {}A{}B", app.step, *text, a, b);
-                            *result = (*result).to_string() + "\n" + ll.as_str();
-                        }
-                        Err(be) => {
-                            *result = (*result).to_string() + "\n" + be.to_string().as_str();
-                        }
-                    };
+    if app.complete {
+        if widget::Button::new()
+            .w_h(130.0, 40.0)
+            .top_left_of(ids.canvas)
+            .color(app.bg_color.invert())
+            .border(app.border_width)
+            .label("New Game")
+            .set(ids.button1, ui)
+            .was_clicked()
+        {
+            app.complete = false;
+            *result = "".to_string();
+            app.step = 0;
+            app.secret_number = create_secret_number();
+        }
+    } else {
+        // A text box in which we can mutate a single line of text, and trigger reactions via the
+        // `Enter`/`Return` key.
+        let text = &mut app.text_input;
+        for event in widget::TextBox::new(text)
+            .center_justify()
+            .w_h(130.0, 40.0)
+            .top_left_of(ids.canvas)
+            .border(app.border_width)
+            .border_color(app.bg_color.invert().plain_contrast())
+            .color(app.bg_color.invert())
+            .set(ids.text_input, ui)
+        {
+            match event {
+                widget::text_box::Event::Enter => {
+                    if (*text).trim() == "answer" {
+                        let answer: String =
+                            app.secret_number.iter().map(|i| i.to_string()).collect();
+                        *result = (*result).to_string() + "\n" + answer.as_str();
+                        app.complete = true;
+                    } else {
+                        match Number::new((*text).as_str()) {
+                            Ok(num) => {
+                                app.step += 1;
+                                let (a, b) = num.ab_check(app.secret_number);
+                                let ll = format!("{}. {}  {}A{}B", app.step, *text, a, b);
+                                *result = (*result).to_string() + "\n" + ll.as_str();
+                                if a == 4 {
+                                    app.complete = true;
+                                }
+                            }
+                            Err(be) => {
+                                *result = (*result).to_string() + "\n" + be.to_string().as_str();
+                            }
+                        };
+                    }
+                    *text = "".to_string();
                 }
-            }
-            widget::text_box::Event::Update(string) => {
-                *text = string;
+                widget::text_box::Event::Update(string) => {
+                    *text = string;
+                }
             }
         }
     }
 
     widget::Text::new(result)
-        .font_id(fonts.space_mono_regular_id)
+        .font_id(fonts.fira_code_regular_id)
         .font_size(28)
         .color(QI_HEI)
         .top_left_of(ids.canvas)
