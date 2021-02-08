@@ -5,10 +5,10 @@ use std::error::Error;
 
 pub fn create_secret_number() -> [u32; 4] {
     let mut secret_number: [u32; 4] = [0, 0, 0, 0];
-    secret_number[0] = rand::thread_rng().gen_range(1, 10);
+    secret_number[0] = rand::thread_rng().gen_range(1..10);
     for index in 1..4 {
         'outer: loop {
-            secret_number[index] = rand::thread_rng().gen_range(0, 10);
+            secret_number[index] = rand::thread_rng().gen_range(0..10);
             for i in 0..index {
                 if secret_number[i] == secret_number[index] {
                     continue 'outer;

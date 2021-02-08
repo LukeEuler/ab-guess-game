@@ -3,4 +3,4 @@ os:
   - osx
 language: rust
 rust:
-  - 1.44.1
+  - 1.49.0

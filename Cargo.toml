@@ -4,5 +4,4 @@ version = "0.1.0"
 authors = ["LukeEuler <luke16times@gmail.com>"]
 
 [dependencies]
-rand="0.3.0"
-find_folder = "0.3.0"
+rand="0.8.3"

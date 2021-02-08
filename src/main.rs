@@ -1,4 +1,3 @@
-extern crate find_folder;
 extern crate rand;
 
 mod number;
