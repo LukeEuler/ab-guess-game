@@ -39,12 +39,13 @@ fn main() {
 
         step += 1;
         let (a, b) = guess_number.ab_check(secret_number);
+        if a == 4 {
+            println!("Step: {}. You win!", step);
+            break;
+        }
         println!(
             "Step: {}. You guessed: {}. {}A{}B",
             step, guess_number.value, a, b
         );
-        if a == 4 {
-            break;
-        }
     }
 }
