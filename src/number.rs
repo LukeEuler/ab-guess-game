@@ -4,7 +4,11 @@ pub fn create_secret_number() -> [u32; 4] {
     let mut secret_number: [u32; 4] = [0, 0, 0, 0];
     for index in 0..4 {
         'outer: loop {
-            secret_number[index] = rand::thread_rng().gen_range(0..10);
+            if index == 0 {
+                secret_number[index] = rand::thread_rng().gen_range(1..10);
+            } else {
+                secret_number[index] = rand::thread_rng().gen_range(0..10);
+            }
             for i in 0..index {
                 if secret_number[i] == secret_number[index] {
                     continue 'outer;
