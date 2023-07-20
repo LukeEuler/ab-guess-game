@@ -34,14 +34,14 @@ impl Number {
         Number::new_with_number(num)
     }
 
-    fn new_with_number(num: u32) -> Result<Number, String> {
+    pub fn new_with_number(num: u32) -> Result<Number, String> {
         if !valid_check(num) {
             return Err(format!("invalid number {}", num));
         }
         Ok(Number { value: num })
     }
 
-    fn get_guess_number(&self) -> [u32; 4] {
+    pub fn get_guess_number(&self) -> [u32; 4] {
         let guess_number: [u32; 4] = [
             self.value / 1000,
             (self.value / 100) % 10,

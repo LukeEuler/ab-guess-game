@@ -41,7 +41,7 @@ fn main() {
             break;
         }
         println!(
-            "Step: {step}. You guessed: {}. {a}A{b}B",
+            "Step: {step}. You guessed: {} {a}A{b}B",
             guess_number.value
         );
     }
